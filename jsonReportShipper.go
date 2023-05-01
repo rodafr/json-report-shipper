@@ -28,6 +28,8 @@ const (
 	pluginActionEnv             = "json-report-shipper_action"
 	timeFormat                  = "2006-01-02 15.04.05"
 	reportApiUrlEnv             = "report_api_url"
+	reportApiUserNameEnv        = "GGGGR_user"
+	reportApiPasswordEnv        = "GGGGR_pass"
 )
 
 var projectRoot string
@@ -94,15 +96,24 @@ func createReport(suiteResult *gauge_messages.SuiteExecutionResult) (jsonContent
 
 func shipReport(jsonContents []byte) int {
 	reportApiUrl := os.Getenv(reportApiUrlEnv)
+	reportApiUserName := os.Getenv(reportApiUserNameEnv)
+	reportApiPassword := os.Getenv(reportApiPasswordEnv)
 	data := bytes.NewReader(jsonContents)
 
 	logger.Infof("Received JSON content, shipping to %v\n", reportApiUrl)
 
-	response, err := http.Post(reportApiUrl, "*/*", data)
+	client := &http.Client{}
+	request, err := http.NewRequest("POST", reportApiUrl, data)
 	if err != nil {
 		logger.Debugf(err.Error())
 	}
-	response.Body.Close()
+
+	request.SetBasicAuth(reportApiUserName, reportApiPassword)
+
+	response, err := client.Do(request)
+	if err != nil {
+		logger.Debugf(err.Error())
+	}
 
 	if response.StatusCode != http.StatusCreated {
 		logger.Debugf("HTTP status code received was not 201: %v", response.StatusCode)
