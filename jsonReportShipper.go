@@ -100,7 +100,11 @@ func shipReport(jsonContents []byte) int {
 	reportApiPassword := os.Getenv(reportApiPasswordEnv)
 	data := bytes.NewReader(jsonContents)
 
-	logger.Infof("Received JSON content, shipping to %v\n", reportApiUrl)
+	if reportApiUserName == "" {
+		logger.Warnf("[WARNING] Report API credentials not set")
+	} else {
+		logger.Infof("Received JSON content, shipping to %v\n", reportApiUrl)
+	}
 
 	client := &http.Client{}
 	request, err := http.NewRequest("POST", reportApiUrl, data)
@@ -116,9 +120,10 @@ func shipReport(jsonContents []byte) int {
 	}
 
 	if response.StatusCode != http.StatusCreated {
-		logger.Debugf("HTTP status code received was not 201: %v", response.StatusCode)
+		logger.Warnf("[WARNING] HTTP status code received was not 201: %v\n", response.Status)
+	} else {
+		logger.Infof("Success: HTTP status code received from API was: %v\n", response.Status)
 	}
-	logger.Infof("Success: HTTP status code received from API was: %v\n", response.Status)
 
 	return response.StatusCode
 }
