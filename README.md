@@ -22,16 +22,23 @@ Add this plugin to your Gauge project by registering it in `manifest.json` file.
 By default, reports are generated in `reports/json-report-shipper` directory of your Gauge project. You can set a custom location by setting the below mentioned property in `default.properties` file of `env/default` directory.
 
 ```
-#The path to the gauge reports directory. Should be either relative to the project directory or an absolute path
+# The path to the gauge reports directory. Should be either relative to the project directory or an absolute path
 gauge_reports_dir = reports
 ```
 
 You can also choose to override the reports after each execution or retain all of them as follows.
 
 ```
-#Set as false if gauge reports should not be overwritten on each execution. A new time-stamped directory will be created on each execution.
+# Set as false if gauge reports should not be overwritten on each execution. A new time-stamped directory will be created on each execution.
 overwrite_reports = true
 ```
+
+Set the API URL in your environment file(s) like so:
+```
+# Report API url
+report_api_url = http://127.0.0.1:8080/api/reports
+```
+
 
 Build from Source
 -----------------
