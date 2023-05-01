@@ -1,0 +1,492 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Gauge JSON result schema",
+    "type": "object",
+    "properties": {
+        "projectName": {
+            "description": "Project Name",
+            "type": "string"
+        },
+        "timestamp": {
+            "description": "Timestamp of execution",
+            "type": "string"
+        },
+        "successRate": {
+            "description": "Success rate of execution",
+            "type": "integer"
+        },
+        "environment": {
+            "description": "Environment against which execution is done",
+            "type": "string"
+        },
+        "tags": {
+            "description": "Tags used to filter specifications during execution",
+            "type": "string"
+        },
+        "executionTime": {
+            "description": "Execution time for suite in milliseconds",
+            "type": "integer"
+        },
+        "executionStatus": {
+            "description": "Execution status of suite",
+            "type": "string"
+        },
+        "specResults": {
+            "description": "Execution result of specifications",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/specResult"
+            }
+        },
+        "beforeSuiteHookFailure": {
+            "description": "Before suite hook failure information",
+            "$ref": "#/definitions/hookFailure"
+        },
+        "beforeSuiteHookMessages": {
+            "description": "Custom messages written in before suite hooks",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterSuiteHookFailure": {
+            "description": "After suite hook failure information",
+            "$ref": "#/definitions/hookFailure"
+        },
+        "afterSuiteHookMessages": {
+            "description": "Custom messages written in after suite hooks",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "passedSpecsCount": {
+            "description": "Number of passed specifications",
+            "type": "integer"
+        },
+        "failedSpecsCount": {
+            "description": "Number of failed specifications",
+            "type": "integer"
+        },
+        "skippedSpecsCount": {
+            "description": "Number of skipped specifications",
+            "type": "integer"
+        },
+        "passedScenariosCount": {
+            "description": "Number of passed scenarios in suite",
+            "type": "integer"
+        },
+        "failedScenariosCount": {
+            "description": "Number of failed scenarios in suite",
+            "type": "integer"
+        },
+        "skippedScenariosCount": {
+            "description": "Number of skipped scenarios in suite",
+            "type": "integer"
+        }
+    },
+    "required": [
+        "projectName",
+        "timestamp",
+        "successRate",
+        "environment",
+        "tags",
+        "executionTime",
+        "executionStatus",
+        "specResults",
+        "beforeSuiteHookFailure",
+        "beforeSuiteHookMessages",
+        "afterSuiteHookFailure",
+        "afterSuiteHookMessages",
+        "passedSpecsCount",
+        "failedSpecsCount",
+        "skippedSpecsCount",
+        "passedScenariosCount",
+        "failedScenariosCount",
+        "skippedScenariosCount"
+    ],
+    "definitions": {
+        "specResult": {
+            "description": "Specification result",
+            "type": "object",
+            "properties": {
+                "specHeading": {
+                    "description": "Specification heading",
+                    "type": "string"
+                },
+                "fileName": {
+                    "description": "File name of specification",
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "Specification tags",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "executionStatus": {
+                    "description": "Execution status of specification",
+                    "type": "string"
+                },
+                "executionTime": {
+                    "description": "Execution time of specification in milliseconds",
+                    "type": "integer"
+                },
+                "scenarios": {
+                    "description": "Scenarios of a specification",
+                    "type": "array",
+                    "items": {
+                        "description": "Scenario",
+                        "type": "object",
+                        "properties": {
+                            "scenarioHeading": {
+                                "description": "Scenario heading",
+                                "type": "string"
+                            },
+                            "tags": {
+                                "description": "Specification tags",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "executionStatus": {
+                                "description": "Execution status of scenario",
+                                "type": "string"
+                            },
+                            "executionTime": {
+                                "description": "Execution time for scenario in milliseconds",
+                                "type": "integer"
+                            },
+                            "contexts": {
+                                "description": "Context items",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "$ref": "#/definitions/specItem"
+                                }
+                            },
+                            "teardowns": {
+                                "description": "Teardown items",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "$ref": "#/definitions/specItem"
+                                }
+                            },
+                            "items": {
+                                "description": "Scenario items",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "$ref": "#/definitions/specItem"
+                                }
+                            },
+                            "beforeScenarioHookFailure": {
+                                "description": "Before scenario hook failure",
+                                "$ref": "#/definitions/hookFailure"
+                            },
+                            "beforeScenarioHookMessages": {
+                                "description": "Custom messages written in before scenario hooks",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "afterScenarioHookFailure": {
+                                "description": "After scenario hook failure",
+                                "$ref": "#/definitions/hookFailure"
+                            },
+                            "afterScenarioHookMessages": {
+                                "description": "Custom messages written in after scenario hooks",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "skipErrors": {
+                                "description": "Reasons if scenario is skipped",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "tableRowIndex": {
+                                "description": "Table row index, if its a table driven execution",
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "scenarioHeading",
+                            "tags",
+                            "executionStatus",
+                            "executionTime",
+                            "contexts",
+                            "teardowns",
+                            "items",
+                            "beforeScenarioHookFailure",
+                            "beforeScenarioHookMessages",
+                            "afterScenarioHookFailure",
+                            "afterScenarioHookMessages",
+                            "skipErrors",
+                            "tableRowIndex"
+                        ]
+                    }
+                },
+                "isTableDriven": {
+                    "description": "True, if specification is a table driven specification",
+                    "type": "boolean"
+                },
+                "datatable": {
+                    "description": "Data table, if spec is table driven specification",
+                    "$ref": "#/definitions/table"
+                },
+                "beforeSpecHookFailure": {
+                    "description": "Before spec hook failure information",
+                    "$ref": "#/definitions/hookFailure"
+                },
+                "beforeSpecHookMessages": {
+                    "description": "Custom messages written in before spec hooks",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "afterSpecHookFailure": {
+                    "description": "After spec hook failure information",
+                    "$ref": "#/definitions/hookFailure"
+                },
+                "afterSpecHookMessages": {
+                    "description": "Custom messages written in after spec hooks",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "passedScenarioCount": {
+                    "description": "Number of passed scenarios in specification",
+                    "type": "integer"
+                },
+                "failedScenarioCount": {
+                    "description": "Number of failed scenarios in specification",
+                    "type": "integer"
+                },
+                "skippedScenarioCount": {
+                    "description": "Number of skipped scenarios in specification",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "specHeading",
+                "fileName",
+                "tags",
+                "executionStatus",
+                "executionTime",
+                "scenarios",
+                "isTableDriven",
+                "datatable",
+                "beforeSpecHookFailure",
+                "beforeSpecHookMessages",
+                "afterSpecHookFailure",
+                "afterSpecHookMessages",
+                "passedScenarioCount",
+                "failedScenarioCount",
+                "skippedScenarioCount"
+            ]
+        },
+        "result": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "Execution status, possible values are pass, fail, skip, notExecuted",
+                    "type": "string"
+                },
+                "stacktrace": {
+                    "description": "Stacktrace of the failure. Empty if there is no failure",
+                    "type": "string"
+                },
+                "screenshot": {
+                    "description": "Screenshot taken at the time of failure. Empty if there is no failure",
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "description": "Error message of the failure. Empty if there is no failure",
+                    "type": "string"
+                },
+                "executionTime": {
+                    "description": "Time taken for execution in milliseconds",
+                    "type": "integer"
+                },
+                "skippedReason": {
+                    "description": "Reason for which execution is skipped",
+                    "type": "string"
+                },
+                "messages": {
+                    "type": "array",
+                    "description": "Custom messages",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "errorType": {
+                    "type": "string",
+                    "description": "Type of error. Possible values are assertion, verification"
+                }
+            },
+            "required": [
+                "status",
+                "stackTrace",
+                "screenshot",
+                "errorMessage",
+                "executionTime",
+                "skippedReason",
+                "messages",
+                "errorType"
+            ]
+        },
+        "hookFailure": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "errorMessage": {
+                    "description": "Error message of the failure. Empty if there is no failure",
+                    "type": "string"
+                },
+                "screenshot": {
+                    "description": "Screenshot taken at the time of failure. Empty if there is no failure",
+                    "type": "string"
+                },
+                "stacktrace": {
+                    "description": "Stacktrace of the failure. Empty if there is no failure",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "stackTrace",
+                "screenshot",
+                "errorMessage"
+            ]
+        },
+        "specItem": {
+            "type": "object",
+            "properties": {
+                "itemType": {
+                    "description": "Type of specItem. Possible values are step, concept",
+                    "type": "string"
+                },
+                "stepText": {
+                    "description": "Step text as specified in spec file",
+                    "type": "string"
+                },
+                "parameters": {
+                    "description": "Step parameters",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "$ref": "#/definitions/parameter"
+                    }
+                },
+                "beforeStepHookFailure": {
+                    "description": "Before step hook failure information",
+                    "$ref": "#/definitions/hookFailure"
+                },
+                "beforeStepHookMessages": {
+                    "description": "Custom messages written in before step hooks",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "afterStepHookFailure": {
+                    "description": "After step hook failure information",
+                    "$ref": "#/definitions/hookFailure"
+                },
+                "afterStepHookMessages": {
+                    "description": "Custom messages written in after step hooks",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "result": {
+                    "description": "Execution result",
+                    "$ref": "#/definitions/result"
+                }
+            },
+            "required": [
+                "itemType",
+                "stepText",
+                "beforeStepHookFailure",
+                "beforeStepHookMessages",
+                "afterStepHookFailure",
+                "afterStepHookMessages",
+                "result",
+                "parameters"
+            ]
+        },
+        "table": {
+            "description": "Table",
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "headers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "rows": {
+                    "type": "array",
+                    "items": {
+                        "description": "Table row",
+                        "type": "object",
+                        "properties": {
+                            "cells": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "cells"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "headers",
+                "rows"
+            ]
+        },
+        "parameter": {
+            "type": "object",
+            "properties": {
+                "parameterType": {
+                    "description": "Type of parameter. Possible values are static, dynamic, table, special_table, special_string",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name of parameter. Used as key to lookup the value. Empty in case of static parameter type.",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "Value of parameter. Valid in case of parameterType being static, dynamic, special_string",
+                    "type": "string"
+                },
+                "table": {
+                    "description": "Table parameter. Valid in case of parameterType being table and special_table",
+                    "$ref": "#/definitions/table"
+                }
+            },
+            "required": [
+                "parameterType"
+            ]
+        }
+    }
+}

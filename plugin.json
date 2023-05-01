@@ -1,0 +1,32 @@
+{
+    "id": "json-report-shipper",
+    "version": "0.0.3",
+    "name": "JSON Report Shipper",
+    "description": "JSON reporting and shipping plugin",
+    "install": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+    },
+    "command": {
+        "windows": [
+            "bin/json-report-shipper"
+        ],
+        "linux": [
+            "bin/json-report-shipper"
+        ],
+        "darwin": [
+            "bin/json-report-shipper"
+        ]
+    },
+    "scope": [
+        "Execution"
+    ],
+    "gaugeVersionSupport": {
+        "minimum": "1.0.7",
+        "maximum": ""
+    },
+    "capabilities": [
+        "grpc_support"
+    ]
+}
