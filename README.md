@@ -33,10 +33,14 @@ You can also choose to override the reports after each execution or retain all o
 overwrite_reports = true
 ```
 
-Set the API URL in your environment file(s) like so:
+Set the API URL and credentials in your environment file(s) like so:
 ```
 # Report API url
 report_api_url = http://127.0.0.1:8080/api/reports
+
+# Credentials for API
+GGGGR_user = username
+GGGGR_user = password
 ```
 
 
