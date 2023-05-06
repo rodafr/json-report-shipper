@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -27,9 +29,9 @@ const (
 	gaugePortEnv                = "plugin_connection_port"
 	pluginActionEnv             = "json-report-shipper_action"
 	timeFormat                  = "2006-01-02 15.04.05"
-	reportApiUrlEnv             = "report_api_url"
-	reportApiUserNameEnv        = "GGGGR_user"
-	reportApiPasswordEnv        = "GGGGR_pass"
+	reportApiUrlEnv             = "grepo_url"
+	reportApiUserNameEnv        = "grepo_api_user"
+	reportApiPasswordEnv        = "grepo_api_pass"
 )
 
 var projectRoot string
@@ -66,9 +68,9 @@ func addDefaultPropertiesToProject() {
 		DefaultValue: "true"})
 
 	reportApiUrlProperty := &(common.Property{
-		Comment:      "URL to Reports API endpoint",
+		Comment:      "URL to API endpoint, /reports will be added",
 		Name:         reportApiUrlEnv,
-		DefaultValue: "http://127.0.0.1:8080/api/reports",
+		DefaultValue: "http://127.0.0.1:8080/",
 	})
 
 	if !common.FileExists(defaultPropertiesFile) {
@@ -101,13 +103,23 @@ func shipReport(jsonContents []byte) int {
 	data := bytes.NewReader(jsonContents)
 
 	if reportApiUserName == "" {
-		logger.Warnf("[WARNING] Report API credentials not set")
-	} else {
-		logger.Infof("Received JSON content, shipping to %v\n", reportApiUrl)
+		logger.Warnf("[WARNING] Report API username not set")
+	}
+	if reportApiPassword == "" {
+		logger.Warnf("[WARNING] Report API password not set")
 	}
 
+	u, err := url.Parse(reportApiUrl)
+	if err != nil {
+		logger.Fatalf("[FATAL] Invalid report API URL: %v", err)
+	}
+
+	u.Path = path.Join(u.Path, "api/reports")
+
+	logger.Infof("Received JSON content, shipping to %v\n", u.String())
+
 	client := &http.Client{}
-	request, err := http.NewRequest("POST", reportApiUrl, data)
+	request, err := http.NewRequest("POST", u.String(), data)
 	if err != nil {
 		logger.Debugf(err.Error())
 	}
@@ -116,16 +128,18 @@ func shipReport(jsonContents []byte) int {
 
 	response, err := client.Do(request)
 	if err != nil {
-		logger.Debugf(err.Error())
+		logger.Fatalf("[WARNING] Failed to connect to API: " + err.Error())
 	}
+
+	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusCreated {
 		logger.Warnf("[WARNING] HTTP status code received was not 201: %v\n", response.Status)
 	} else {
 		logger.Infof("Success: HTTP status code received from API was: %v\n", response.Status)
 	}
-
 	return response.StatusCode
+
 }
 
 func generateJSONFileContents(protoSuiteExeResult *gauge_messages.SuiteExecutionResult) []byte {

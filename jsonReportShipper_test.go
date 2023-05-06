@@ -31,9 +31,61 @@ func TestShipReport(t *testing.T) {
 	if err != nil {
 		return
 	}
-
+	os.Setenv("grepo_api_user", "defaultuser")
+	os.Setenv("grepo_api_pass", "defaultpass")
 	os.Setenv("gauge_reports_dir", "testdata")
-	os.Setenv("report_api_url", "http://localhost:8080/api/reports")
+	os.Setenv("grepo_url", "http://localhost:8080/")
+	status := shipReport(testdata)
+
+	if status != 201 {
+		t.Fatalf(`HTTP status not 201`)
+	}
+}
+
+func TestShipReport_WithApiDown(t *testing.T) {
+	testdata, err := os.ReadFile("_testdata/sample.json")
+	if err != nil {
+		return
+	}
+	os.Setenv("grepo_api_user", "defaultuser")
+	os.Setenv("grepo_api_pass", "defaultpass")
+	os.Setenv("gauge_reports_dir", "testdata")
+	os.Setenv("grepo_url", "http://localhost:8123/") //wrong port
+	status := shipReport(testdata)
+
+	if status != 201 {
+		t.Fatalf(`HTTP status not 201`)
+	}
+}
+
+func TestShipReport_WithMissingUsername(t *testing.T) {
+	testdata, err := os.ReadFile("_testdata/sample.json")
+	if err != nil {
+		return
+	}
+	os.Setenv("grepo_api_pass", "defaultpass")
+	os.Setenv("gauge_reports_dir", "testdata")
+	os.Setenv("grepo_url", "http://localhost:8080/") 
+
+	want := 401
+
+	got := shipReport(testdata)
+
+	if want != got {
+		t.Fatalf("Wanted %v, got %v", want, got)
+	}
+}
+
+func TestShipReport_ReportWithStatusFailed(t *testing.T) {
+	// url := "localhost:8080/reports"
+	testdata, err := os.ReadFile("_testdata/failedreport.json")
+	if err != nil {
+		return
+	}
+	os.Setenv("grepo_api_user", "defaultuser")
+	os.Setenv("grepo_api_pass", "defaultpass")
+	os.Setenv("gauge_reports_dir", "testdata")
+	os.Setenv("grepo_url", "http://localhost:8080/")
 	status := shipReport(testdata)
 
 	if status != 201 {

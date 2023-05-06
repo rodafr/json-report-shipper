@@ -1,6 +1,6 @@
 {
     "id": "json-report-shipper",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "name": "JSON Report Shipper",
     "description": "JSON reporting and shipping plugin",
     "install": {
