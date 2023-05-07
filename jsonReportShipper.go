@@ -84,8 +84,8 @@ func addDefaultPropertiesToProject() {
 	logger.Info("Successfully added configurations for json-report-shipper to env/default/default.properties")
 }
 
-func createReport(suiteResult *gauge_messages.SuiteExecutionResult) (jsonContents []byte) {
-	jsonContents = generateJSONFileContents(suiteResult)
+func createReport(suiteResult *gauge_messages.SuiteExecutionResult) {
+	jsonContents := generateJSONFileContents(suiteResult)
 	reportDir, err := createJSONReport(createReportsDirectory(), jsonContents, getNameGen())
 	if err != nil {
 		logger.Fatalf("Report generation failed: %s \n", err)
@@ -93,7 +93,6 @@ func createReport(suiteResult *gauge_messages.SuiteExecutionResult) (jsonContent
 		logger.Infof("Successfully generated json-report to => %s\n", reportDir)
 	}
 	shipReport(jsonContents)
-	return
 }
 
 func shipReport(jsonContents []byte) int {
